@@ -24,7 +24,24 @@ fn main() {
         *prev.entry(nums[i]).or_insert(0) += 1;
     }
 
-    for i in running_size..nums.len() {
+    for i in 0..nums.len() {
+        let mut total: i64 = 0;
+        let mut j = i;
+        loop {
+            total += nums[j];
+            if total == 104054607 || j == 0 {
+                break;
+            }
+            j -= 1;
+        }
+        if total == 104054607 {
+            println!("Found it: {} to {}", j, i);
+            let mut copy: Vec<&i64> = nums[j..i+1].iter().collect();
+            copy.sort();
+            println!("{}", copy[0] + copy[copy.len() - 1]);
+        }
+    }
+    /*for i in running_size..nums.len() {
         if !sums_to(&prev, nums[i]) {
             println!("{}", &nums[i]);
         }
@@ -40,10 +57,6 @@ fn main() {
             }
             _ => panic!("wtf")
         }
-        /*prev[&to_del] -= 1;
-
-        if prev[&to_del] == 0 {
-            prev.remove(&to_del);
-        }*/
-    }
+        // 104054607
+    }*/
 }
