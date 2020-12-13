@@ -4,31 +4,26 @@ use std::mem;
 
 fn count_adjacent(map: &Vec<Vec<char>>, i: usize, j: usize) -> i32 {
     let mut res = 0;
+    let deltas = vec![(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)];
 
-    if i > 0 && j > 0 && map[i-1][j-1] == '#' {
-        res += 1;
-    }
-    if i > 0 && map[i-1][j] == '#' {
-        res += 1;
-    }
-    if i > 0 && map[i-1].get(j+1) == Some(&'#') {
-        res += 1;
-    }
-    if j > 0 && map[i][j-1] == '#' {
-        res += 1;
-    }
-    if map[i].get(j+1) == Some(&'#') {
-        res += 1;
-    }
-    if j > 0 && map.get(i+1).map(|line| line[j-1]) == Some('#') {
-        res += 1;
-    }
-    if map.get(i+1).map(|line| line[j]) == Some('#') {
-        res += 1;
-    }
+    for delta in deltas {
+        let (di, dj) = delta;
+        let mut si = i as i32 + di;
+        let mut sj = j as i32 + dj;
 
-    if map.get(i+1).and_then(|line| line.get(j+1)) == Some(&'#') {
-        res += 1;
+        while si >= 0 && si < map.len() as i32 && sj >= 0 &&
+            sj < map[0].len() as i32 {
+            let c = map[si as usize][sj as usize];
+            if c == '.' {
+                si += di;
+                sj += dj;
+            } else {
+                if c == '#' {
+                    res += 1;
+                }
+                break;
+            }
+        }
     }
     res
 }
@@ -41,7 +36,7 @@ fn iterate(current: &mut Vec<Vec<char>>, next: &mut Vec<Vec<char>>) {
                 'L' if count_adjacent(current, i, j) == 0 => {
                      next[i][j] = '#';
                 }
-                '#' if count_adjacent(current, i, j) >= 4 => {
+                '#' if count_adjacent(current, i, j) >= 5 => {
                     next[i][j] = 'L';
                 }
                 _ => {}
