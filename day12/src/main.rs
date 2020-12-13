@@ -17,24 +17,24 @@ fn main() {
 
     let mut x = 0;
     let mut y = 0;
-    let mut dx = 1;
-    let mut dy = 0;
+    let mut dx = 10;
+    let mut dy = 1;
 
     for action in actions {
         let (m ,n) = action;
-        println!("{}{}", m, n);
+        //println!("{}{}", m, n);
         match m.as_str()  {
             "N" => {
-                y += n;
+                dy += n;
             }
             "S" => {
-                y -= n;
+                dy -= n;
             }
             "E" => {
-                x += n;
+                dx += n;
             }
             "W" => {
-                x -= n;
+                dx -= n;
             }
             "F" => {
                 x += dx*n;
@@ -54,18 +54,46 @@ fn main() {
                      */
                     if dx == 0 {
                         dx = -dy;
-                        dy = 0;
-                    } else { //dy == 0
+                        dy = 0; //dx
+                    } else if dy == 0 {
                         dy = dx;
-                        dx = 0;
+                        dx = 0; //dy
+                    } else {
+                        let signx = dx/dx.abs();
+                        let signy = dy/dy.abs();
+                        if signx == signy {
+                            // upper right or lower left quadrants
+                            let tmp = dy;
+                            dy = dx;
+                            dx = -tmp;
+                        } else {
+                            // upper left or lower right;
+                            let tmp = dx;
+                            dx = -dy;
+                            dy = tmp;
+                        }
                     }
                 } else if (m == "L" && n == 270) || (m == "R" && n == 90) {
                     if dx == 0 {
                         dx = dy;
-                        dy = 0;
-                    } else { //dy == 0
+                        dy = 0; // dx
+                    } else if dy == 0 {
                         dy = -dx;
-                        dx = 0;
+                        dx = 0; //dy
+                    } else {
+                        let signx = dx/dx.abs();
+                        let signy = dy/dy.abs();
+                        if signx == signy {
+                            // upper right or lower left quadrants
+                            let tmp = dy;
+                            dy = -dx;
+                            dx = tmp;
+                        } else {
+                            // upper left or lower right;
+                            let tmp = dx;
+                            dx = dy;
+                            dy = -tmp;
+                        }
                     }
                 } else {
                     panic!("wtf {} {}", m, n);
