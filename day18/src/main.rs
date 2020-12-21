@@ -29,14 +29,13 @@ where
                     }
                 };
                 current = apply(current, num, op);
-                let next = match parts.next() {
+                op = match parts.next() {
+                    Some(')') | None => { return current; }
                     Some(p) => { p }
-                    None => { return current; }
                 };
-                if next == ')' {
-                    return current;
+                if op == '*' {
+                    return apply(current, eval(parts), op);
                 }
-                op = next;
             }
         }
     }
